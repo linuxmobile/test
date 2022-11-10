@@ -75,6 +75,11 @@ const pizzas = [
     }
 ]
 
+let selectedPizza = JSON.parse(localStorage.getItem("pizza")) || [];
+
+const saveToLocalStorage = (pizzas) => {
+    return localStorage.setItem("pizza", JSON.stringify(pizzas))
+}
 
 /* EJERCICIO 2 */
 
@@ -95,16 +100,6 @@ const renderPizzas = (pizza) => {
     <p class="pizza__p">Busca otro número de pizza para ver si la tenemos.</p>
     </div>
     `
-}
-
-// let pizza = 
-
-const saveToLocalStorage = (pizzas) => {
-    if (!localStorage.getItem("pizza")) {
-        localStorage.setItem("pizza", JSON.stringify(pizzas))
-    } else {
-        return null
-    }
 }
 
 const showEmptyError = () => {
@@ -149,10 +144,11 @@ const submitSearch = (e) => {
     }
     const searchedPizza = searchPizza(Number(searchValue))
     renderResult(searchedPizza);
-    console.log(saveToLocalStorage(searchPizza))
+    saveToLocalStorage(searchedPizza)
 }
 
 const init = () => {
+    renderResult(selectedPizza)
     form.addEventListener("submit", submitSearch)
 }
 
