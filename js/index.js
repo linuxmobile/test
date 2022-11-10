@@ -148,7 +148,7 @@ const submitSearch = (e) => {
 }
 
 const init = () => {
-    renderResult(selectedPizza)
+    // renderResult(selectedPizza)
     form.addEventListener("submit", submitSearch)
 }
 
