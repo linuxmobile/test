@@ -75,7 +75,7 @@ const pizzas = [
     }
 ]
 
-let selectedPizza = JSON.parse(localStorage.getItem("pizza")) || [];
+let pizza = JSON.parse(localStorage.getItem("pizza")) || [];
 
 const saveToLocalStorage = (pizzas) => {
     return localStorage.setItem("pizza", JSON.stringify(pizzas))
@@ -88,19 +88,6 @@ const form = document.getElementById("form")
 const input = document.querySelector(".form__input")
 
 const searchPizza = (value) => pizzas.find((pizza) => pizza.id === value)
-
-const renderPizzas = (pizza) => {
-    const { nombre, precio, ingredientes, image } = pizza
-    return `
-    <div class="pizza__section">
-    <img class="pizza__img" src="${ image }"/>
-    <h2 class="pizza__title">${nombre.toUpperCase()}</h2>
-    <p class="pizza__description">Ingredientes: ${ingredientes.map((i) => i).join(", ")}.</p>
-    <h3 class="pizza__price"> Precio: $${precio} </h3>
-    <p class="pizza__p">Busca otro número de pizza para ver si la tenemos.</p>
-    </div>
-    `
-}
 
 const showEmptyError = () => {
     resultSection.innerHTML = `
@@ -118,19 +105,24 @@ const renderResult = (pizza) => {
       <h2 class="error"> ¡No pudimos encontrar tu pizza! :(</h2>
       <p class="error__p">¡Probá con otro número!.</p>
       </div>`
-    } else {
-        resultSection.innerHTML = renderPizzas(pizza);
-    //   resultSection.innerHTML = `
-    //   <div class="pizza__section">
-    //   <img class="pizza__img" src="${ pizza.image }"/>
-    //   <h2 class="pizza__title">${pizza.nombre.toUpperCase()}</h2>
-    //   <p class="pizza__description">Ingredientes: ${pizza.ingredientes.join(", ")}.</p>
-    //   <h3 class="pizza__price"> Precio: $${pizza.precio} </h3>
-    //   <p class="pizza__p">Busca otro número de pizza para ver si la tenemos.</p>
-    //   </div>
-    //   `
     }
 }
+
+const renderPizzas = (pizza) => {
+    return `
+    <div class="pizza__section">
+    <img class="pizza__img" src="${ pizza.image }"/>
+    <h2 class="pizza__title">${pizza.nombre.toUpperCase()}</h2>
+    <p class="pizza__description">Ingredientes: ${pizza.ingredientes.map((i) => i).join(", ")}.</p>
+    <h3 class="pizza__price"> Precio: $${pizza.precio} </h3>
+    <p class="pizza__p">Busca otro número de pizza para ver si la tenemos.</p>
+    </div>
+    `
+}
+
+const renderPizzasList = (pizzaList) => {
+    resultSection.innerHTML = pizzaList.map((pizza) => renderPizzas(pizza)).join("");
+  };
 
 /*  Esto es prácticamente lo que aprendimos en la clase :3
     Evitando el comportamiendo por default del form!
@@ -143,12 +135,17 @@ const submitSearch = (e) => {
         return;
     }
     const searchedPizza = searchPizza(Number(searchValue))
-    renderResult(searchedPizza);
-    saveToLocalStorage(searchedPizza)
+
+    pizza = [searchedPizza]
+    console.log(pizza)
+    renderPizzasList(pizza)
+    saveToLocalStorage(pizza)
+    // renderResult(searchedPizza);
+    // saveToLocalStorage(searchedPizza)
 }
 
 const init = () => {
-    // renderResult(selectedPizza)
+    renderPizzasList(pizza)
     form.addEventListener("submit", submitSearch)
 }
 
