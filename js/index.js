@@ -97,15 +97,13 @@ const showEmptyError = () => {
       </div>`
 }
 
-const renderResult = (pizza) => {
-    if (!pizza) {
+const showIdError = (pizza) => {
       resultSection.innerHTML = `
       <div class="pizza__section">
       <i class="fa-sharp fa-solid fa-circle-exclamation"></i>
       <h2 class="error"> ¡No pudimos encontrar tu pizza! :(</h2>
       <p class="error__p">¡Probá con otro número!.</p>
       </div>`
-    }
 }
 
 const renderPizzas = (pizza) => {
@@ -124,22 +122,35 @@ const renderPizzasList = (pizzaList) => {
     resultSection.innerHTML = pizzaList.map((pizza) => renderPizzas(pizza)).join("");
   };
 
+const isBetween = (value) => {
+    const checkID = pizzas.some((pizza)=>pizza.id === Number(value))
+    return checkID;
+}
+
 /*  Esto es prácticamente lo que aprendimos en la clase :3
     Evitando el comportamiendo por default del form!
     Si el valor a buscar está vacío muestra que no hay nada! */
 const submitSearch = (e) => {
     e.preventDefault()
     const searchValue = input.value;
-    if (!searchValue) {
-        showEmptyError(searchValue);
-        return;
-    }
     const searchedPizza = searchPizza(Number(searchValue))
+    if (!searchValue) {
+        showEmptyError(searchValue)
+    } else if (!isBetween(input.value)){
+        showIdError()
+    } else {
+        pizza = [searchedPizza]
+        renderPizzasList(pizza)
+        saveToLocalStorage(pizza)
+    }
+    // if (!searchValue) {
+    //     showEmptyError(searchValue);
+    //     return;
+    // }
 
-    pizza = [searchedPizza]
-    console.log(pizza)
-    renderPizzasList(pizza)
-    saveToLocalStorage(pizza)
+    // pizza = [searchedPizza]
+    // renderPizzasList(pizza)
+    // saveToLocalStorage(pizza)
     // renderResult(searchedPizza);
     // saveToLocalStorage(searchedPizza)
 }
